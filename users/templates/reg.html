@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="Author" content="Luckyvail">
+    <meta name="Keywords" content="user">
+    <title>user</title>
+    <script src="/static/js/jquery-1.11.3.js"></script>
+    <script>
+	$(function(){
+		//对用户名进行相应的验证.
+		$("#userName").change(function(){
+			userNameValidate();
+		});
+		//对密码进行验证
+		$("#password").change(function(){
+			passwordValidate();
+		});
+		//对重复密码进行验证
+		$("#repassword").change(function(){
+			repasswordValidate();
+		});
+		//对手机号进行相应的验证
+		$("#tel").change(function(){
+			telValidate();
+		});
+		//对邮箱进行相应的验证
+		$("#email").change(function(){
+			emailValidate();
+		});
+	//用户名的相关验证
+	function userNameValidate(){
+		//先判断是否为空
+		var value=$("#userName").val();
+		if(value.length==0)
+        {
+            $("#userNameTitle").text('通行证用户名不能为空');
+            $("#userNameTitle").removeClass('success').addClass('danger');
+            return false;
+        }
+		//定义正则表达式
+        var pattern=/^[A-Za-z][A-Za-z0-9]{3,11}$/;
+        if(!pattern.test(value))
+        {
+            $("#userNameTitle").text('通行证用户名格式错误，请重新输入');
+            $("#userNameTitle").removeClass('success').addClass('danger');
+            return false;
+        }else{
+        	 $("#userNameTitle").text('通行证用户名输入正确');
+             $("#userNameTitle").removeClass('danger').addClass('success');
+             return true;
+        }
+	}
+	//密码的相关验证
+	function passwordValidate(){
+		//先判断是否为空
+		var value=$("#password").val();
+		if(value.length==0)
+        {
+            $("#passwordTitle").text('密码不能为空');
+            $("#passwordTitle").removeClass('success').addClass('danger');
+            return false;
+        }
+		//定义正则表达式
+        var pattern=/^[A-Za-z0-9]{6,16}$/;
+        if(!pattern.test(value))
+        {
+            $("#passwordTitle").text('密码不符合格式，请重新输入');
+            $("#passwordTitle").removeClass('success').addClass('danger');
+            return false;
+        }else{
+        	 $("#passwordTitle").text('密码输入正确');
+             $("#passwordTitle").removeClass('danger').addClass('success');
+             return true;
+        }
+	}
+	//重复密码的相关验证
+	function repasswordValidate(){
+		//先判断是否为空
+		var value=$("#repassword").val();
+		if(value.length==0)
+        {
+            $("#repasswordTitle").text('重复密码不能为空');
+            $("#repasswordTitle").removeClass('success').addClass('danger');
+            return false;
+        }
+		//判断值是否相同
+        if(!(value==$("#password").val()))
+        {
+            $("#repasswordTitle").text('两次输入的密码不一致，请重新输入');
+            $("#repasswordTitle").removeClass('success').addClass('danger');
+            return false;
+        }else{
+        	 $("#repasswordTitle").text('两次密码一致');
+             $("#repasswordTitle").removeClass('danger').addClass('success');
+             return true;
+        }
+	}
+	//手机号的相关验证
+	function telValidate(){
+		//先判断是否为空
+		var value=$("#tel").val();
+		if(value.length==0)
+        {
+            $("#telTitle").text('手机号不能为空');
+            $("#telTitle").removeClass('success').addClass('danger');
+            return false;
+        }
+		//判断值是否相同
+        var pattern=/^1[34578]\d{9}$/;
+        if(!pattern.test(tel.value))
+        {
+            $("#telTitle").text('手机号码格式错误，请重新输入');
+            $("#telTitle").removeClass('success').addClass('danger');
+            return false;
+        }else{
+        	 $("#telTitle").text('手机号输入正确');
+             $("#telTitle").removeClass('danger').addClass('success');
+             return true;
+        }
+	}
+	//邮箱的相关验证
+	function emailValidate(){
+		//先判断是否为空
+		var value=$("#email").val();
+		if(value.length==0)
+        {
+            $("#emailTitle").text('邮箱不能为空');
+            $("#emailTitle").removeClass('success').addClass('danger');
+            return false;
+        }
+		//判断值是否相同
+        var pattern=/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+        if(!pattern.test(value))
+        {
+            $("#emailTitle").text('邮箱格式错误，请重新输入');
+            $("#emailTitle").removeClass('success').addClass('danger');
+            return false;
+        }else{
+        	 $("#emailTitle").text('邮箱输入正确');
+             $("#emailTitle").removeClass('danger').addClass('success');
+             return true;
+        }
+	}
+	function formValidate(){
+		return userNameValidate()&&passwordValidate()&&repasswordValidate()
+		&&telValidate()&&emailValidate();
+	}
+	$("#reg").click(function(){
+	    if(formValidate()){
+	    var params = {
+            userName:$("#userName").val(),
+            password:$("#password").val(),
+            repassword:$("#repassword").val(),
+            tel:$("#tel").val(),
+            email:$("#email").val(),
+            csrfmiddlewaretoken:$("[name='csrfmiddlewaretoken']").val()
+            }
+	       $.post("/users/resver/",params,function(data){
+	            alert('收到'+data)
+	       })
+	    }else{
+	        alert('信息有误');
+	    }
+	});
+    $("#clean").click(function(){
+        $("#userName").val('');
+        $("#password").val('');
+        $("#repassword").val('');
+        $("#tel").val('');
+        $("#email").val('');
+	});
+
+});
+</script>
+</head>
+<body>
+    {% csrf_token %}
+    <p>
+        <label for="userName">通行证用户名：</label>
+        <input type="text" id="userName"><span id="userNameTitle" style="margin-left:19px">请输入4-12位用户名（首位为字母）</span>
+    </p>
+    <p>
+        <label for="password">登录密码：</label>
+        <input type="password" id="password"><span id="passwordTitle">密码为6-16位</span>
+    </p>
+    <p>
+        <label for="repassword">重复登录密码：</label>
+        <input type="password" id="repassword"><span id="repasswordTitle">请再次输入密码</span>
+    </p>
+    <p>
+    <label for="tel">关联手机号:</label>
+    <input type="text" id="tel"><span id="telTitle">请输入关联手机号</span>
+    </p>
+    <p>
+        <label for="email">保密邮箱：</label>
+        <input type="text" id="email"><span id="emailTitle">请输入保密邮箱</span>
+    </p>
+    <p>
+        <input type="submit" value="注册" id='reg'>
+        <input type="submit" value="清除" id="clean">
+    </p>
+</body>
+</html>

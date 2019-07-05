@@ -1,0 +1,24 @@
+/*页面基础样式*/
+body,h1,h2,h3,h4,h5,h6,p,ul,ol{
+    margin:0;
+    padding:0;
+    list-style:none;
+}
+/*设置基础文本样式*/
+body{
+    font:12px youyuan,Arial;
+    color:black;
+    background:#fff;
+
+}
+a{
+    color:#ccc;
+    text-decoration:none;
+}
+a:link {color:#27a !important} /*设置全局未点击链接的颜色*/
+a:visited {color:#666699;text-decoration: none; !important} /*设置全局被点击后的链接颜色*/
+a:hover {background: #37a; !important} /*设置全局鼠标悬停在链接上未点击时的颜色*/
+/*a:active {color: #颜色代码 !important} 设置全局鼠标在点击链接瞬间发生的动作*/
+input:focus{
+    outline:none;
+}
